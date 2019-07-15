@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: C# edition in Eclipse IDE
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.acute;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.3.2.qualifier
 Bundle-Activator: org.eclipse.acute.AcutePlugin
-Bundle-Vendor: Red Hat Inc.
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.lsp4e;bundle-version="0.1.0",
@@ -23,8 +23,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.externaltools,
  org.eclipse.jdt.annotation;resolution:=optional,
  com.google.gson;bundle-version="2.7.0",
- org.apache.commons.compress;bundle-version="1.6.0"
+ org.apache.commons.compress;bundle-version="1.6.0",
+ org.eclipse.lsp4e.debug;bundle-version="0.2.0",
+ org.eclipse.ui.externaltools
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.variables
-Export-Package: org.eclipse.acute; x-internal:=true
+Export-Package: org.eclipse.acute;x-internal:=true,
+ org.eclipse.acute.debug;x-internal:=true
+Automatic-Module-Name: org.eclipse.acute

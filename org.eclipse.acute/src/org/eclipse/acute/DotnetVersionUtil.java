@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2018 Red Hat Inc. and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *  Lucas Bullen (Red Hat Inc.) - Initial implementation
@@ -21,7 +23,7 @@ public class DotnetVersionUtil {
 	public static final int MINIMUM_MAJOR_VERSION = 2;
 
 	public static boolean isValidVersionFormat(String version) {
-		return !version.isEmpty() && version.matches("\\d+\\.\\d+\\.\\d+.*");
+		return !version.isEmpty() && version.matches("\\d+\\.\\d+\\.\\d+.*"); //$NON-NLS-1$
 	}
 
 	public static boolean isValidVersionNumber(String version) {
@@ -29,14 +31,14 @@ public class DotnetVersionUtil {
 	}
 
 	public static int getMajorVersionNumber(String version) {
-		return Integer.parseInt(version.split("\\.")[0]);
+		return Integer.parseInt(version.split("\\.")[0]); //$NON-NLS-1$
 	}
 
 	public static String getVersion(String dotnetPath) {
 		try {
-			String[] command = new String[] { "/bin/bash", "-c", dotnetPath + " --version" };
+			String[] command = new String[] { "/bin/bash", "-c", dotnetPath + " --version" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (Platform.getOS().equals(Platform.OS_WIN32)) {
-				command = new String[] { "cmd", "/c", "\"" + dotnetPath + "\" --version" };
+				command = new String[] { "cmd", "/c", "\"" + dotnetPath + "\" --version" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 			ProcessBuilder builder = new ProcessBuilder(command);
 			Process process = builder.start();
@@ -49,6 +51,6 @@ public class DotnetVersionUtil {
 		} catch (IOException | InterruptedException e) {
 			// Error will be caught with empty response
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 }

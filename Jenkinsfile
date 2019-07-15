@@ -1,28 +1,65 @@
 pipeline {
-	agent any
+	agent {
+		kubernetes {
+			label 'acute-buildtest'
+			defaultContainer 'environment'
+			yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: environment
+    image: mickaelistria/eclipse-acute-build-test-env:test
+    tty: true
+    command: [ "uid_entrypoint", "cat" ]
+    resources:
+      requests:
+        memory: "2.6Gi"
+        cpu: "1.3"
+      limits:
+        memory: "2.6Gi"
+        cpu: "1.3"
+  - name: jnlp
+    image: 'eclipsecbi/jenkins-jnlp-agent'
+    volumeMounts:
+    - mountPath: /home/jenkins/.ssh
+      name: volume-known-hosts
+  volumes:
+  - configMap:
+      name: known-hosts
+    name: volume-known-hosts
+"""
+		}
+	}
 	options {
+		timeout(time: 60, unit: 'MINUTES')
 		buildDiscarder(logRotator(numToKeepStr:'10'))
 	}
+	environment {
+	    DOTNET_SKIP_FIRST_TIME_EXPERIENCE="true"
+	    MAVEN_OPTS="-Xms256m -Xmx2048m"
+	    M2_REPO="$WORKSPACE/m2-repo"
+	}
 	stages {
-		stage('Prepare') {
+		stage('Test and initiate .NET Core') {
 			steps {
-				git url: 'https://github.com/eclipse/aCute.git'
-				cleanWs()
-				checkout scm
+			  sh 'mkdir dotnet-init && \
+				  cd dotnet-init && \
+					dotnet --version && \
+					dotnet new console && \
+					dotnet restore && \
+					dotnet run'
 			}
 		}
 		stage('Build') {
 			steps {
 				wrap([$class: 'Xvnc', useXauthority: true]) {
-					withEnv(["PATH+NODE=/shared/common/node-v7.10.0-linux-x64/bin", "PATH+DOTNET=/shared/common/dotnet-sdk-2.0.0-linux-x64"]) {
-						withMaven(maven: 'apache-maven-latest', jdk: 'jdk1.8.0-latest') {
-							sh 'mvn clean verify -Dmaven.test.error.ignore=true -Dmaven.test.failure.ignore=true -PpackAndSign'
-						}
-					}
+					sh 'mvn clean verify -Dmaven.test.error.ignore=true -Dmaven.test.failure.ignore=true -Dcbi.jarsigner.skip=false'
 				}
 			}
 			post {
-				success {
+				always {
+					archiveArtifacts artifacts: '*/target/work/configuration/*.log,*/target/work/data/.metadata/.log', fingerprint: false
 					junit '*/target/surefire-reports/TEST-*.xml' 
 				}
 			}
@@ -33,11 +70,13 @@ pipeline {
 				// TODO deploy all branch from Eclipse.org Git repo
 			}
 			steps {
-				// TODO compute the target URL (snapshots) according to branch name (0.5-snapshots...)
-				sh 'rm -rf /home/data/httpd/download.eclipse.org/acute/snapshots'
-				sh 'mkdir -p /home/data/httpd/download.eclipse.org/acute/snapshots'
-				sh 'cp -r repository/target/repository/* /home/data/httpd/download.eclipse.org/acute/snapshots'
-				sh 'zip -R /home/data/httpd/download.eclipse.org/acute/snapshots/repository.zip repository/target/repository/*'
+				container('jnlp') {
+					sshagent (['projects-storage.eclipse.org-bot-ssh']) {
+						sh 'ssh genie.acute@projects-storage.eclipse.org rm -rf /home/data/httpd/download.eclipse.org/acute/snapshots'
+						sh 'ssh genie.acute@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/acute/snapshots'
+						sh 'scp -r repository/target/repository/* genie.acute@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/acute/snapshots'
+					}
+				}
 			}
 		}
 	}

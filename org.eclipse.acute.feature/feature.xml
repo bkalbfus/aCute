@@ -2,8 +2,8 @@
 <feature
       id="org.eclipse.acute.feature"
       label="%name"
-      version="0.1.0.qualifier"
-      provider-name="Red Hat Inc."
+      version="0.3.2.qualifier"
+      provider-name="Eclipse aCute"
       license-feature="org.eclipse.license"
       license-feature-version="0.0.0">
 
@@ -36,15 +36,6 @@
          fragment="true"
          unpack="true"/>
    <plugin
-         id="org.eclipse.acute.omnisharpServer.linux.x86"
-         os="linux"
-         arch="x86"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="true"/>
-   <!--plugin
          id="org.eclipse.acute.omnisharpServer.macosx.x86_64"
          os="macosx"
          arch="x86_64"
@@ -52,7 +43,7 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
-         unpack="true"/-->
+         unpack="true"/>
    <plugin
          id="org.eclipse.acute.omnisharpServer.win32.x86_64"
          os="win32"
@@ -63,9 +54,33 @@
          fragment="true"
          unpack="true"/>
    <plugin
-         id="org.eclipse.acute.omnisharpServer.win32.x86"
+         id="org.eclipse.acute.msBuildServer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+   <plugin
+         id="org.eclipse.acute.netcoredbg.linux.x86_64"
+         os="linux"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="true"/>
+   <plugin
+         id="org.eclipse.acute.netcoredbg.macosx.x86_64"
+         os="macosx"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="true"/>
+   <plugin
+         id="org.eclipse.acute.netcoredbg.win32.x86_64"
          os="win32"
-         arch="x86"
+         arch="x86_64"
          download-size="0"
          install-size="0"
          version="0.0.0"

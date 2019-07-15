@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2017 Red Hat Inc. and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *  Lucas Bullen   (Red Hat Inc.) - Initial implementation
@@ -20,7 +22,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public class AcutePreferenceInitializer extends AbstractPreferenceInitializer {
 
-	public static String explicitDotnetPathPreference = "dotnet.explicitPath";
+	public static String explicitDotnetPathPreference = "dotnet.explicitPath"; //$NON-NLS-1$
 
 	@Override
 	public void initializeDefaultPreferences() {
@@ -31,9 +33,9 @@ public class AcutePreferenceInitializer extends AbstractPreferenceInitializer {
 
 	private String getBestDotnetPathGuess() {
 		try {
-			String[] command = new String[] { "/bin/bash", "-c", "which dotnet" };
+			String[] command = new String[] { "/bin/bash", "-c", "which dotnet" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (Platform.getOS().equals(Platform.OS_WIN32)) {
-				command = new String[] { "cmd", "/c", "which dotnet" };
+				command = new String[] { "cmd", "/c", "which dotnet" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			ProcessBuilder builder = new ProcessBuilder(command);
 			Process process = builder.start();
@@ -46,7 +48,7 @@ public class AcutePreferenceInitializer extends AbstractPreferenceInitializer {
 		} catch (IOException | InterruptedException e) {
 			// Error will be caught with empty response
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 }

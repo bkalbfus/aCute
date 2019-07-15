@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2017 Red Hat Inc. and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *  Lucas Bullen   (Red Hat Inc.) - Initial implementation
+ *******************************************************************************/
 package org.eclipse.acute.dotnettest;
 
 
@@ -11,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.acute.AcutePlugin;
+import org.eclipse.acute.Messages;
 
 public class DotnetTestAccessor {
 
@@ -39,7 +52,7 @@ public class DotnetTestAccessor {
 
 		try {
 			ProcessBuilder restorePB;
-			restorePB = new ProcessBuilder(AcutePlugin.getDotnetCommand(), "restore");
+			restorePB = new ProcessBuilder(AcutePlugin.getDotnetCommand(), "restore"); //$NON-NLS-1$
 			restorePB.directory(projectFile);
 			Process restoreProcess = restorePB.start();
 			restoreProcess.waitFor();
@@ -52,7 +65,7 @@ public class DotnetTestAccessor {
 		}
 
 		ProcessBuilder processBuilder;
-		processBuilder = new ProcessBuilder(AcutePlugin.getDotnetCommand(), "test", "--list-tests");
+		processBuilder = new ProcessBuilder(AcutePlugin.getDotnetCommand(), "test", "--list-tests"); //$NON-NLS-1$ //$NON-NLS-2$
 		processBuilder.directory(projectFile);
 
 		try {
@@ -63,7 +76,7 @@ public class DotnetTestAccessor {
 				Boolean testsListExists = false;
 
 				while ((inputLine = in.readLine()) != null) {
-					if (inputLine.equals("The following Tests are available:")) {
+					if (inputLine.equals(Messages.DotnetTestAccessor_listTests)) {
 						testsListExists = true;
 						break;
 					}
@@ -71,10 +84,10 @@ public class DotnetTestAccessor {
 
 				if (testsListExists) {
 					while ((inputLine = in.readLine()) != null) {
-						if (!inputLine.matches("\\s+.*")) {
+						if (!inputLine.matches("\\s+.*")) { //$NON-NLS-1$
 							continue;
 						}
-						String FullyQualifiedName = inputLine.replaceFirst("\\s+", "").replaceAll("\\(.*\\)", "");
+						String FullyQualifiedName = inputLine.replaceFirst("\\s+", "").replaceAll("\\(.*\\)", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						int index = FullyQualifiedName.lastIndexOf('.');
 						String className = FullyQualifiedName.substring(0, index);
 						String methodName = FullyQualifiedName.substring(index + 1, FullyQualifiedName.length());
